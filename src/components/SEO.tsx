@@ -5,20 +5,20 @@
  * See: https://www.gatsbyjs.org/docs/use-static-query/
  */
 
-import React from "react"
-import { Helmet } from "react-helmet"
-import { useStaticQuery, graphql } from "gatsby"
+import React from 'react';
+import { Helmet } from 'react-helmet';
+import { useStaticQuery, graphql } from 'gatsby';
 
 type SeoMeta = Array<object>;
 
 type Props = {
   description?: string;
   lang?: string;
-  meta?: Array<SeoMeta>,
+  meta?: Array<SeoMeta>;
   title: string;
-}
+};
 
-const SEO: React.FC<Props> = ({ description = '', lang= '', meta = [], title }) => {
+const SEO: React.FC<Props> = ({ description = '', lang = '', meta = [], title }) => {
   const { site } = useStaticQuery(
     graphql`
       query {
@@ -30,10 +30,10 @@ const SEO: React.FC<Props> = ({ description = '', lang= '', meta = [], title }) 
           }
         }
       }
-    `
-  )
+    `,
+  );
 
-  const metaDescription = description || site.siteMetadata.description
+  const metaDescription = description || site.siteMetadata.description;
 
   const pageMeta: SeoMeta = [
     {
@@ -74,7 +74,7 @@ const SEO: React.FC<Props> = ({ description = '', lang= '', meta = [], title }) 
       name: `twitter:description`,
       content: metaDescription,
     },
-];
+  ];
 
   return (
     <Helmet
@@ -83,9 +83,9 @@ const SEO: React.FC<Props> = ({ description = '', lang= '', meta = [], title }) 
       }}
       title={title}
       titleTemplate={`%s | ${site.siteMetadata.title}`}
-      meta={[ ...pageMeta, ...openGraphMeta, ...twitterMeta, meta ]}
+      meta={[...pageMeta, ...openGraphMeta, ...twitterMeta, meta]}
     />
-  )
-}
+  );
+};
 
-export default SEO
+export default SEO;
