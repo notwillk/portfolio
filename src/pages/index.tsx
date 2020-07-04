@@ -1,22 +1,17 @@
 import React from 'react';
-import { Link } from 'gatsby';
+import { useStaticQuery, graphql } from 'gatsby';
 
 import Layout from '../components/Layout';
-import Image from '../components/Image';
+import Collection from '../components/Collection';
 import SEO from '../components/SEO';
 
-const IndexPage = () => (
-  <Layout>
-    <SEO title="Home" />
-    <h1>Hi people</h1>
-    <p>Welcome to your new typescript Gatsby site.</p>
-    <p>Now go build something great.</p>
-    <div style={{ maxWidth: `300px`, marginBottom: `1.45rem` }}>
-      <Image />
-    </div>
-    <Link to="/page-2/">Go to page 2</Link> <br />
-    <Link to="/using-typescript/">Go to "Using TypeScript"</Link>
-  </Layout>
-);
+const IndexPage = () => {
+  return (
+    <Layout>
+      <SEO title="Home" />
+      <Collection />
+    </Layout>
+  );
+};
 
 export default IndexPage;
