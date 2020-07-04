@@ -5,7 +5,7 @@ import styles from './collection.module.css';
 
 const query = graphql`
   query MyQuery {
-    allFile(filter: {dir: {regex: "/src/photos$/"}}, sort: {fields: name}) {
+    allFile(filter: { dir: { regex: "/src/photos$/" } }, sort: { fields: name }) {
       edges {
         node {
           name
@@ -22,7 +22,7 @@ type FileData = {
 };
 
 type FileNode = {
-  node: FileData
+  node: FileData;
 };
 
 const Collection: React.FC = () => {

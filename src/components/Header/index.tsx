@@ -8,9 +8,7 @@ type Props = {
 
 const Header: React.FC<Props> = ({ siteTitle = '' }) => (
   <header className={styles.header}>
-    <h1 style={{ margin: 0 }}>
-      {siteTitle}
-    </h1>
+    <h1 style={{ margin: 0 }}>{siteTitle}</h1>
   </header>
 );
 
