@@ -4,42 +4,69 @@ import { useStaticQuery, graphql, navigate } from 'gatsby';
 import styles from './collection.module.css';
 
 const query = graphql`
-  query AllPhotosQuery {
-    allFile(filter: { dir: { regex: "/src/photos$/" } }, sort: { fields: name }) {
-      edges {
-        node {
-          id
-          publicURL
+  query AllPhotosQueryWithMetadata {
+    photoFiles: allFile(
+      filter: { dir: { regex: "/src/photos$/" }, extension: { in: ["jpg", "webp"] } }
+      sort: { fields: name, order: DESC }
+    ) {
+      nodes {
+        id
+        name
+        publicURL
+      }
+    }
+    metadataFiles: allFile(filter: { extension: { eq: "yaml" } }) {
+      nodes {
+        name
+        childPhotosYaml {
+          objectFit
+          objectPosition
+          alt
         }
       }
     }
   }
 `;
 
-type FillMode = 'cover' | 'contain';
-
-type FileData = {
+type PhotoData = {
+  name: string;
   id: string;
   publicURL: string;
 };
 
-type FileNode = {
-  node: FileData;
+type MetadataData = {
+  name: string;
+  childPhotosYaml?: {
+    objectPosition: string;
+    objectFit: string;
+    alt: string;
+  };
+};
+
+type CompiledMetadata = {
+  [key: string]: {
+    objectPosition?: string;
+    objectFit?: string;
+    alt?: string;
+  };
 };
 
 type Props = {
   photoId?: string;
 };
 
-const IMAGE_VIEW_ORDER: Array<FillMode> = ['cover', 'contain'];
-
 const Collection: React.FC<Props> = ({ photoId }) => {
   const [selectedPhotoId, setSelectedPhotoId] = React.useState<string | undefined>(photoId);
-  const [fillMode, setFillMode] = React.useState<FillMode>(IMAGE_VIEW_ORDER[0]);
   const data = useStaticQuery(query);
-  const photos: Array<FileNode> = data.allFile.edges;
+  const photos: Array<PhotoData> = data.photoFiles.nodes;
+  const metadata: Array<MetadataData> = data.metadataFiles.nodes;
 
-  const selectedPhotoIndex = photos.findIndex(({ node: { id } }) => id === selectedPhotoId);
+  const metadataByName: CompiledMetadata = metadata.reduce(
+    (acc, { name, childPhotosYaml = {} }) => ({ ...acc, [name]: childPhotosYaml }),
+    {},
+  );
+
+  const selectedPhotoIndex = photos.findIndex(({ id }) => id === selectedPhotoId);
 
   React.useEffect(() => {
     if (photoId && selectedPhotoIndex === -1) {
@@ -47,44 +74,41 @@ const Collection: React.FC<Props> = ({ photoId }) => {
     }
   }, [photoId, selectedPhotoIndex]);
 
-  const rotateImageView = React.useCallback(() => {
-    const nextIndex = IMAGE_VIEW_ORDER.indexOf(fillMode) + 1;
-
-    if (nextIndex >= IMAGE_VIEW_ORDER.length) {
-      setSelectedPhotoId(undefined);
-      setFillMode(IMAGE_VIEW_ORDER[0]);
-    } else {
-      setFillMode(IMAGE_VIEW_ORDER[nextIndex]);
-    }
-  }, [fillMode]);
-
   return (
     <>
       <summary className={styles.collection}>
-        {photos.map(({ node: { id, publicURL } }) => (
+        {photos.map(({ name, id, publicURL }) => (
           <div key={id} className={styles.item} onClick={() => setSelectedPhotoId(id)}>
-            <img src={publicURL} />
+            <img
+              src={publicURL}
+              style={{ objectPosition: metadataByName[name]?.objectPosition }}
+              alt={metadataByName[name]?.alt}
+            />
           </div>
         ))}
       </summary>
       {selectedPhotoIndex !== -1 && (
         <article className={styles.zoomin}>
           <img
-            className={styles[fillMode]}
-            src={photos[selectedPhotoIndex].node.publicURL}
-            onClick={rotateImageView}
+            src={photos[selectedPhotoIndex].publicURL}
+            onClick={() => setSelectedPhotoId(undefined)}
+            style={{
+              objectPosition: metadataByName[photos[selectedPhotoIndex].name]?.objectPosition,
+              objectFit: metadataByName[photos[selectedPhotoIndex].name]?.objectFit,
+            }}
+            alt={metadataByName[name]?.alt}
           />
           {selectedPhotoIndex > 0 && (
             <button
               className={styles.previous}
-              onClick={() => setSelectedPhotoId(photos[selectedPhotoIndex - 1].node.id)}>
+              onClick={() => setSelectedPhotoId(photos[selectedPhotoIndex - 1].id)}>
               Previous
             </button>
           )}
           {selectedPhotoIndex < photos.length - 1 && (
             <button
               className={styles.next}
-              onClick={() => setSelectedPhotoId(photos[selectedPhotoIndex + 1].node.id)}>
+              onClick={() => setSelectedPhotoId(photos[selectedPhotoIndex + 1].id)}>
               Next
             </button>
           )}

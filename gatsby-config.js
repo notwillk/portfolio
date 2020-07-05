@@ -26,6 +26,7 @@ module.exports = {
         path: `${__dirname}/src/photos`,
       },
     },
+    `gatsby-transformer-yaml`,
     `gatsby-transformer-sharp`,
     `gatsby-plugin-sharp`,
     {

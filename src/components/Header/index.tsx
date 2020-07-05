@@ -5,17 +5,19 @@ import styles from './header.module.css';
 
 const query = graphql`
   query FirstPhotoColorQuery {
-    allFile(sort: { fields: name }, limit: 1) {
-      edges {
-        node {
-          colors {
-            vibrant
-            darkVibrant
-            lightVibrant
-            muted
-            darkMuted
-            lightMuted
-          }
+    allFile(
+      filter: { dir: { regex: "/src/photos$/" }, extension: { in: ["jpg", "webp"] } }
+      sort: { fields: name, order: DESC }
+      limit: 1
+    ) {
+      nodes {
+        colors {
+          vibrant
+          darkVibrant
+          lightVibrant
+          muted
+          darkMuted
+          lightMuted
         }
       }
     }
@@ -28,7 +30,7 @@ type Props = {
 
 const Header: React.FC<Props> = ({ siteTitle = '' }) => {
   const data = useStaticQuery(query);
-  const { colors } = data.allFile.edges[0].node;
+  const { colors } = data.allFile.nodes[0];
 
   const style = {
     backgroundColor: colors.darkMuted,
