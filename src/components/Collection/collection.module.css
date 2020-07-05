@@ -90,3 +90,48 @@
         padding-top: 100%;
     }
 }
+
+.zoomin {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100vw;
+    height: 100vh;
+    background: black;
+}
+
+.zoomin img {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+.cover {
+    object-fit: cover;
+}
+
+.contain {
+    object-fit: contain;
+}
+
+.next, .previous {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 20%;
+    opacity: 0;
+}
+
+.next {
+    right: 0;
+}
+
+.previous {
+    left: 0;
+}

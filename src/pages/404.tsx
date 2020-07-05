@@ -1,11 +1,12 @@
 import React from 'react';
+import { navigate } from 'gatsby';
 
 import Layout from '../components/Layout';
 
 const NotFoundPage = () => {
   React.useEffect(() => {
-    window.location.href = '/';
-  });
+    navigate('/', { replace: true });
+  }, []);
   return <Layout />;
 };
 
