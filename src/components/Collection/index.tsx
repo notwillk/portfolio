@@ -31,14 +31,11 @@ type Props = {
   photoId?: string;
 };
 
-const swapFillMode: { [key in FillMode]: FillMode } = {
-  cover: 'contain',
-  contain: 'cover',
-};
+const IMAGE_VIEW_ORDER: Array<FillMode> = ['cover', 'contain'];
 
 const Collection: React.FC<Props> = ({ photoId }) => {
   const [selectedPhotoId, setSelectedPhotoId] = React.useState<string | undefined>(photoId);
-  const [fillMode, setFillMode] = React.useState<FillMode>('cover');
+  const [fillMode, setFillMode] = React.useState<FillMode>(IMAGE_VIEW_ORDER[0]);
   const data = useStaticQuery(query);
   const photos: Array<FileNode> = data.allFile.edges;
 
@@ -49,6 +46,17 @@ const Collection: React.FC<Props> = ({ photoId }) => {
       navigate('/', { replace: true });
     }
   }, [photoId, selectedPhotoIndex]);
+
+  const rotateImageView = React.useCallback(() => {
+    const nextIndex = IMAGE_VIEW_ORDER.indexOf(fillMode) + 1;
+
+    if (nextIndex >= IMAGE_VIEW_ORDER.length) {
+      setSelectedPhotoId(undefined);
+      setFillMode(IMAGE_VIEW_ORDER[0]);
+    } else {
+      setFillMode(IMAGE_VIEW_ORDER[nextIndex]);
+    }
+  }, [fillMode]);
 
   return (
     <>
@@ -64,8 +72,7 @@ const Collection: React.FC<Props> = ({ photoId }) => {
           <img
             className={styles[fillMode]}
             src={photos[selectedPhotoIndex].node.publicURL}
-            onDoubleClick={() => setSelectedPhotoId(undefined)}
-            onClick={() => setFillMode(swapFillMode[fillMode])}
+            onClick={rotateImageView}
           />
           {selectedPhotoIndex > 0 && (
             <button
