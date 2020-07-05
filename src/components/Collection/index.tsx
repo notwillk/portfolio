@@ -4,7 +4,7 @@ import { useStaticQuery, graphql, navigate } from 'gatsby';
 import styles from './collection.module.css';
 
 const query = graphql`
-  query MyQuery {
+  query AllPhotosQuery {
     allFile(filter: { dir: { regex: "/src/photos$/" } }, sort: { fields: name }) {
       edges {
         node {

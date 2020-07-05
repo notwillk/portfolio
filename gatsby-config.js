@@ -5,6 +5,12 @@ module.exports = {
     author: `@willk`,
   },
   plugins: [
+    {
+      resolve: 'gatsby-plugin-extract-image-colors',
+      options: {
+        extensions: ['jpg', 'png'],
+      },
+    },
     `gatsby-plugin-react-helmet`,
     {
       resolve: `gatsby-source-filesystem`,
