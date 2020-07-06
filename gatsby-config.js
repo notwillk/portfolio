@@ -3,8 +3,17 @@ module.exports = {
     title: `Photography Portfolio (placeholder photos)`,
     description: `This is a portfolio of photos`,
     author: `@willk`,
+    siteUrl: `https://willk.photos`,
   },
   plugins: [
+    {
+      resolve: 'gatsby-plugin-robots-txt',
+      options: {
+        policy: [{ userAgent: '*', disallow: ['/'] }],
+        sitemap: null,
+        host: null
+      },
+    },
     {
       resolve: 'gatsby-plugin-extract-image-colors',
       options: {
