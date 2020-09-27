@@ -33,8 +33,8 @@ const Header: React.FC<Props> = ({ siteTitle = '' }) => {
   const { colors } = data.allFile.nodes[0];
 
   const style = {
-    backgroundColor: colors.darkMuted,
-    color: colors.lightVibrant,
+    backgroundColor: 'black',
+    color: 'white',
   };
 
   return (

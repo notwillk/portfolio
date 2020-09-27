@@ -1,7 +1,10 @@
 import React from 'react';
 import { useStaticQuery, graphql, navigate } from 'gatsby';
+import { CloseCircleFilled } from'@ant-design/icons';
 
 import styles from './collection.module.css';
+
+type ObjectFit = "-moz-initial" | "inherit" | "initial" | "revert" | "unset" | "contain" | "cover" | "fill" | "none" | "scale-down" | undefined;
 
 const query = graphql`
   query AllPhotosQueryWithMetadata {
@@ -94,7 +97,7 @@ const Collection: React.FC<Props> = ({ photoId }) => {
             onClick={() => setSelectedPhotoId(undefined)}
             style={{
               objectPosition: metadataByName[photos[selectedPhotoIndex].name]?.objectPosition,
-              objectFit: metadataByName[photos[selectedPhotoIndex].name]?.objectFit,
+              objectFit: metadataByName[photos[selectedPhotoIndex].name]?.objectFit as ObjectFit,
             }}
             alt={metadataByName[name]?.alt}
           />
@@ -112,6 +115,11 @@ const Collection: React.FC<Props> = ({ photoId }) => {
               Next
             </button>
           )}
+          <button
+            className={styles.close}
+            onClick={() => setSelectedPhotoId(undefined)}>
+            <CloseCircleFilled style={{ fontSize: '32px', color: '#000' }} />
+          </button>
         </article>
       )}
     </>
